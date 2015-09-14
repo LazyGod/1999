@@ -9,6 +9,7 @@ public class Gun : MonoBehaviour {
 	private float secondsBetweenShoots;
 	private float nextPossibleShootTime;
 	public float rpm;
+    public float gunID;
 
 	//Components
 	public Transform spawn;
