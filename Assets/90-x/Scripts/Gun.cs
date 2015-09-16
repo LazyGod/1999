@@ -10,6 +10,8 @@ public class Gun : MonoBehaviour {
 	private float nextPossibleShootTime;
 	public float rpm;
     public float gunID;
+    public float damage;
+    public LayerMask collisionMask;
 
 	//Components
 	public Transform spawn;
@@ -39,11 +41,16 @@ public class Gun : MonoBehaviour {
 			RaycastHit Hit;
 
 			float shootDistance = 20;
-			if (Physics.Raycast (ray, out Hit, shootDistance))
+			if (Physics.Raycast (ray, out Hit, shootDistance, collisionMask))
 			{
-
 				shootDistance = Hit.distance;
+
+                if (Hit.collider.GetComponent<Entity>())
+                {
+                    Hit.collider.GetComponent<Entity>().TakeDamage(damage);
+                }
 			}
+
 			nextPossibleShootTime = Time.time + secondsBetweenShoots;
 
 			audio.Play();
