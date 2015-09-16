@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
 {
 
     //handling
+    public GameObject tazBone;
+    public GameObject hold;
     public float speedRotation = 450;
     public float walkSpeed = 5;
     public float runSpeed = 8;
@@ -15,9 +17,11 @@ public class PlayerController : MonoBehaviour
 
 
 
+
     //Systeam
     private Quaternion targetRotation;
     private Vector3 currentVelocityMod;
+    private Quaternion dir;
 
 
 
@@ -55,15 +59,31 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Keypad2))
+
+        for (int i = 0; i < guns.Length;i++ )
         {
-            EquipGun(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            EquipGun(0);
+
+            if ((Input.GetKeyDown((i+1) + "")) || (Input.GetKeyDown("[" + (i+1) + "]")))
+            {
+                EquipGun(i);
+                break;
+
+            }
         }
 
+        /*    if (Input.GetKeyDown(KeyCode.Keypad2))
+            {
+                EquipGun(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad1))
+            {
+                EquipGun(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.Keypad3))
+            {
+                EquipGun(2);
+            }
+        */
 
     }
 
@@ -104,15 +124,21 @@ public class PlayerController : MonoBehaviour
 
     void ControlMouse()
     {
-        Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+
+        float ix = Input.GetAxisRaw("Horizontal");
+        float iy = Input.GetAxisRaw("Vertical");
+
+        Vector3 input = new Vector3(ix, 0, iy);
         Vector3 mousePos = Input.mousePosition;
         mousePos = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.transform.position.y - transform.position.y));
         targetRotation = Quaternion.LookRotation(mousePos - new Vector3(transform.position.x, 0, transform.position.z));
         transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, speedRotation * Time.deltaTime);
 
+        ///Hold Rotation
+        hold.transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, speedRotation * Time.deltaTime);
 
 
-        //Vector3 motion = input;
+
         currentVelocityMod = Vector3.MoveTowards(currentVelocityMod, input, acceleration * Time.deltaTime);
         Vector3 motion = input;
 
@@ -122,6 +148,9 @@ public class PlayerController : MonoBehaviour
         controller.Move(motion * Time.deltaTime);
 
         anim.SetFloat("Speed", Mathf.Sqrt(motion.x * motion.x + motion.z * motion.z));
+
+        //    tazBone.transform.rotation = Quaternion.LookRotation(input);
+
 
     }
 
