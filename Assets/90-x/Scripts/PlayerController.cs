@@ -22,11 +22,13 @@ public class PlayerController : MonoBehaviour
     private Quaternion targetRotation;
     private Vector3 currentVelocityMod;
     private Quaternion dir;
+    private bool reloading;
 
 
 
     //Components
     private CharacterController controller;
+    private AnimatorTransitionInfo armsTransitionInfo;
     private Camera cam;
     private Animator anim;
     private Gun currentGun;
@@ -38,6 +40,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         cam = Camera.main;
         anim = GetComponent<Animator>();
+        armsTransitionInfo = anim.GetAnimatorTransitionInfo(1);
         EquipGun(0);
     }
 
@@ -57,33 +60,37 @@ public class PlayerController : MonoBehaviour
             {
                 currentGun.ShootContin();
             }
+
+            if (Input.GetButtonDown("Reload"))
+            {
+                if (currentGun.Reload())
+                {
+                    anim.SetTrigger("Reload");
+                    reloading = true;
+                }
+            }
+
+            if (reloading)
+            {
+                if (armsTransitionInfo.nameHash == Animator.StringToHash("Arms.Reload -> Arms.Weapon"))
+                {
+                    currentGun.FinishReload();
+                    reloading = false;
+                }
+            }
         }
 
 
-        for (int i = 0; i < guns.Length;i++ )
+        for (int i = 0; i < guns.Length; i++)
         {
 
-            if ((Input.GetKeyDown((i+1) + "")) || (Input.GetKeyDown("[" + (i+1) + "]")))
+            if ((Input.GetKeyDown((i + 1) + "")) || (Input.GetKeyDown("[" + (i + 1) + "]")))
             {
                 EquipGun(i);
                 break;
 
             }
         }
-
-        /*    if (Input.GetKeyDown(KeyCode.Keypad2))
-            {
-                EquipGun(1);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad1))
-            {
-                EquipGun(0);
-            }
-            else if (Input.GetKeyDown(KeyCode.Keypad3))
-            {
-                EquipGun(2);
-            }
-        */
 
     }
 
