@@ -23,22 +23,24 @@ namespace GTRU.Scripts.Car
 
         public Transform centerOfMass;
 
-        /*  public float maxTorque = 50f;
-          public float torquePower = 25f;
-          public float handBrakeForce = 10f;
-
-          */
-
-        // public WheelCollider[] m_wheelCollider = new WheelCollider[4];
-        //public Transform[] m_wheelMeshes = new Transform[4];
-
-
 
         public CarDriveType m_CarDriveType = CarDriveType.FourWheelDrive;
         public SpeedType m_SpeedType;
+
+
+        ////  LIGHTS
+
+        public Light[] backLights = new Light[2];
+        public Light[] forwardLights = new Light[2];
+        //public Light[] backLights = new Light[2];
+
+
+        ////////////
+
+
         public WheelCollider[] m_WheelColliders = new WheelCollider[4];
         public GameObject[] m_WheelMeshes = new GameObject[4];
-       // public Vector3 m_CentreOfMassOffset;
+        // public Vector3 m_CentreOfMassOffset;
         public float m_MaximumSteerAngle;
         [Range(0, 1)]
         public float m_SteerHelper; // 0 is raw physics , 1 the car will grip in the direction it is facing
@@ -62,6 +64,7 @@ namespace GTRU.Scripts.Car
         private float m_CurrentTorque;
         private Rigidbody m_Rigidbody;
         private const float k_ReversingThreshold = 0.01f;
+        private int lightChek = 0;
 
 
 
@@ -124,10 +127,33 @@ namespace GTRU.Scripts.Car
                 m_WheelColliders[2].brakeTorque = hbTorque;
             }
 
+
+
             //CalculateRevs();
             AddDownForce();
             // CheckForWheelSpin();
             TractionControl();
+
+            if (m_WheelColliders[0].rpm < -100)
+            {
+                //backLights[0].enabled = backLights[1].enabled = true;
+                backLights[0].color = backLights[1].color = Color.white;
+            }
+            else
+            {
+                backLights[0].color = backLights[1].color = Color.red;
+            }
+
+
+
+            if (BrakeInput > 0f)
+            {
+                backLights[0].enabled = backLights[1].enabled = true;
+            }
+            else
+            {
+                backLights[0].enabled = backLights[1].enabled = false;
+            }
 
 
         }
@@ -232,26 +258,7 @@ namespace GTRU.Scripts.Car
 
         void Update()
         {
-            /*//UpdateMeshesPos();
 
-            /// CONTROL CAR
-            //currentBreak = m_wheelCollider[0].brakeTorque;
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                handBreak = !handBreak;
-            }
-
-            if (handBreak)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    m_wheelCollider[i].brakeTorque = handBrakeForce;
-                    //wheelCollider[i].brakeTorque = 0;
-                }
-        
-            }
-             * */
             if (Input.GetKey(KeyCode.Q))
             {
                 Time.timeScale = 0.5f;
@@ -260,6 +267,32 @@ namespace GTRU.Scripts.Car
             if (Input.GetKey(KeyCode.E))
             {
                 Time.timeScale = 1f;
+            }
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                lightChek++;
+
+                if(lightChek == forwardLights.Length + 1)
+                {
+                    lightChek = 0;
+                }
+            }
+
+
+            if (lightChek == 0)
+            {
+                forwardLights[0].enabled = forwardLights[1].enabled = false;
+            }
+            else if(lightChek == 1)
+            {
+                forwardLights[0].enabled = forwardLights[1].enabled = true;
+                forwardLights[0].range = forwardLights[1].range = 2;
+            }
+            else if (lightChek == 2)
+            {
+                forwardLights[0].enabled = forwardLights[1].enabled = true;
+                forwardLights[0].range = forwardLights[1].range = 5;
             }
 
 
@@ -315,45 +348,6 @@ namespace GTRU.Scripts.Car
                 }
             }
         }
-
-        /* void FixedUpdate()
-         {
-             float steer = Input.GetAxis("Horizontal");
-             float accel = Input.GetAxis("Vertical");
-
-             float wheelAngle = steer * torquePower;
-
-             m_wheelCollider[1].steerAngle = wheelAngle;
-             m_wheelCollider[3].steerAngle = wheelAngle;
-
-
-
-
-             switch (m_CarDriveType)
-             {
-                 case CarDriveType.FourWheelDrive:
-                     thrustTorque = accel * (maxTorque / 4f);
-                     for (int i = 0; i < 4; i++)
-                     {
-                         m_wheelCollider[i].motorTorque = thrustTorque;
-                     }
-                     break;
-
-                 case CarDriveType.FrontWheelDrive:
-                     thrustTorque = accel * (maxTorque / 2f);
-                     m_wheelCollider[1].motorTorque = m_wheelCollider[3].motorTorque = thrustTorque;
-                     break;
-
-                 case CarDriveType.RearWheelDrive:
-                     thrustTorque = accel * (maxTorque / 2f);
-                     m_wheelCollider[0].motorTorque = m_wheelCollider[2].motorTorque = thrustTorque;
-                     break;
-
-             }
-
-
-
-         }*/
 
         void OnGUI()
         {
