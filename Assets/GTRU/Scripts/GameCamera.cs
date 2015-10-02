@@ -24,7 +24,7 @@ public class GameCamera : MonoBehaviour {
 	{
 	
 		cameraTarget = new Vector3 (target.position.x, transform.position.y, target.position.z);
-		transform.position = Vector3.Lerp (transform.position, cameraTarget, Time.deltaTime * koaf);
+		transform.position = Vector3.Slerp (transform.position, cameraTarget, Time.deltaTime * koaf);
 
 	}
 }

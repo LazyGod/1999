@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
         controller = GetComponent<CharacterController>();
         cam = Camera.main;
-        anim = GetComponent<Animator>();
+        anim = GetComponentInChildren<Animator>();
         armsTransitionInfo = anim.GetAnimatorTransitionInfo(1);
         EquipGun(0);
     }

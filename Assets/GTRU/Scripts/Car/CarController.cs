@@ -116,7 +116,7 @@ namespace GTRU.Scripts.Car
             m_WheelColliders[0].steerAngle = m_SteerAngle;
             m_WheelColliders[3].steerAngle = m_SteerAngle;
 
-            SteerHelper();
+           // SteerHelper();
             ApplyDrive(accel, footbrake);
             CapSpeed();
 
@@ -132,7 +132,7 @@ namespace GTRU.Scripts.Car
             //CalculateRevs();
             AddDownForce();
             // CheckForWheelSpin();
-            TractionControl();
+           // TractionControl();
 
             if (m_WheelColliders[0].rpm < -100)
             {
@@ -288,11 +288,13 @@ namespace GTRU.Scripts.Car
             {
                 forwardLights[0].enabled = forwardLights[1].enabled = true;
                 forwardLights[0].range = forwardLights[1].range = 2;
+                backLights[0].enabled = backLights[1].enabled = true;
             }
             else if (lightChek == 2)
             {
                 forwardLights[0].enabled = forwardLights[1].enabled = true;
                 forwardLights[0].range = forwardLights[1].range = 5;
+                backLights[0].enabled = backLights[1].enabled = true;
             }
 
 
