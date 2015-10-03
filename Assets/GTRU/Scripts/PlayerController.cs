@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
+        
         ControlMouse();
         //ControlWASD ();
         if (currentGun)
@@ -59,6 +59,16 @@ public class PlayerController : MonoBehaviour
             else if (Input.GetButton("Shoot"))
             {
                 currentGun.ShootContin();
+            }
+
+            if (Input.GetButton("Aim"))
+            {
+                //anim.SetFloat("Weapon Aim", 1);
+                anim.SetLayerWeight(1, 1);
+            }
+            else
+            {
+                anim.SetLayerWeight(1, 0);
             }
 
             if (Input.GetButtonDown("Reload"))
