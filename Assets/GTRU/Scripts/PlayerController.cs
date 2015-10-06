@@ -122,6 +122,7 @@ public class PlayerController : MonoBehaviour
 
 
         Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        
 
         if (input != Vector3.zero)
         {
@@ -144,6 +145,11 @@ public class PlayerController : MonoBehaviour
 
         float ix = Input.GetAxisRaw("Horizontal");
         float iy = Input.GetAxisRaw("Vertical");
+
+        anim.SetFloat("Speed_X", ix);
+        anim.SetFloat("Speed_Y", iy);
+        Debug.Log("X" + ix);
+        Debug.Log("Y" + iy);
 
         Vector3 input = new Vector3(ix, 0, iy);
         Vector3 mousePos = Input.mousePosition;
