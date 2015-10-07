@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
 
     //handling
     public GameObject tazBone;
-    public GameObject hold;
+    //public GameObject hold;
     public float speedRotation = 450;
     public float walkSpeed = 5;
     public float runSpeed = 8;
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 currentVelocityMod;
     private Quaternion dir;
     private bool reloading;
+    private int direction;
 
 
 
@@ -47,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        
+
         ControlMouse();
         //ControlWASD ();
         if (currentGun)
@@ -113,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
         currentGun = Instantiate(guns[i], handHold.position, handHold.rotation) as Gun;
         currentGun.transform.parent = handHold;
-        anim.SetFloat("Weapon ID", currentGun.gunID);
+
 
     }
 
@@ -122,7 +123,7 @@ public class PlayerController : MonoBehaviour
 
 
         Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        
+
 
         if (input != Vector3.zero)
         {
@@ -148,17 +149,39 @@ public class PlayerController : MonoBehaviour
 
         anim.SetFloat("Speed_X", ix);
         anim.SetFloat("Speed_Y", iy);
-        Debug.Log("X" + ix);
-        Debug.Log("Y" + iy);
+        //Debug.Log("X" + ix);
+        //Debug.Log("Y" + iy);
 
         Vector3 input = new Vector3(ix, 0, iy);
         Vector3 mousePos = Input.mousePosition;
+
         mousePos = cam.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, cam.transform.position.y - transform.position.y));
         targetRotation = Quaternion.LookRotation(mousePos - new Vector3(transform.position.x, 0, transform.position.z));
         transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, speedRotation * Time.deltaTime);
+        
+
+        if (transform.eulerAngles.y > 45 && transform.eulerAngles.y < 135)
+        {
+            direction = 1;
+        }
+        else if (transform.eulerAngles.y > 135 && transform.eulerAngles.y < 225)
+        {
+            direction = 2;
+        }
+        else if (transform.eulerAngles.y > 225 && transform.eulerAngles.y < 315)
+        {
+            direction = 3;
+        }
+        else
+        {
+            direction = 0;
+        }
+        anim.SetInteger("Direction", direction);
+
+        Debug.Log("direction" + direction);
 
         ///Hold Rotation
-        hold.transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, speedRotation * Time.deltaTime);
+        //hold.transform.eulerAngles = Vector3.up * Mathf.MoveTowardsAngle(transform.eulerAngles.y, targetRotation.eulerAngles.y, speedRotation * Time.deltaTime);
 
 
 
